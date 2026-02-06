@@ -966,7 +966,7 @@ def subscribeNotification():
                     # If it's a timestamp (number), convert to datetime
                     expiration_datetime = datetime.fromtimestamp(expirationTime / 1000)
             except (ValueError, TypeError, OSError) as e:
-                return return_validation_error(f"expirationTime must be in ISO format or valid timestamp: {str(e)}")
+                return return_validation_error("expirationTime must be in ISO format or valid timestamp", 400)
         
         # Call route method that executes stored procedure
         return routePWASubscribe(RM_UserId, endpoint, p256dh_key, auth_key, expiration_datetime)
