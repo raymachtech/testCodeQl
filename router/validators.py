@@ -2,6 +2,9 @@ from flask import jsonify
 import re
 from typing import Optional, Tuple, Any
 
+from response_maker import validation_error_response
+
+
 
 MAX_STRING_LENGTH = 10000
 MAX_QUERY_PARAM_LENGTH = 1000
@@ -180,21 +183,7 @@ def validate_time_format(time_str: str, field_name: str = "Time") -> Tuple[bool,
     return True, None
 
 def return_validation_error(message: str, status_code: int = 400):
-    try:
-        return jsonify({
-            "status": "error",
-            "code": status_code,
-            "message": message,
-            "error": "Validation failed"
-        }), status_code
-    except Exception:
-        # Prevent stack trace exposure if jsonify fails
-        return jsonify({
-            "status": "error",
-            "code": 400,
-            "message": "Validation failed",
-            "error": "Validation failed"
-        }), 400
+    return validation_error_response(message, status_code)
 
 def validate_fields(field_validations: dict) -> Tuple[bool, Optional[str], dict]:
     validated = {}
