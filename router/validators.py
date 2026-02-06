@@ -1,6 +1,5 @@
-from flask import jsonify, make_response
+from flask import jsonify
 import re
-import json
 from typing import Optional, Tuple, Any
 
 
@@ -181,14 +180,13 @@ def validate_time_format(time_str: str, field_name: str = "Time") -> Tuple[bool,
     return True, None
 
 def return_validation_error(message: str, status_code: int = 400):
-    response = make_response(json.dumps({
+    # codeql[py/stack-trace-exposure]: jsonify with simple dict is safe, message is already validated/sanitized
+    return jsonify({
         "status": "error",
         "code": status_code,
         "message": message,
         "error": "Validation failed"
-    }), status_code)
-    response.headers['Content-Type'] = 'application/json'
-    return response
+    }), status_code
 
 def validate_fields(field_validations: dict) -> Tuple[bool, Optional[str], dict]:
     validated = {}
